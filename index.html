@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Genetic TSP Solver</title>
+    <script src="./utils/ga.js"></script>
+    <script src="./utils/city.js"></script>
+    <link rel="stylesheet" href="./style/styles.css" />
+    <img id="ch" src="./resources/ch.png" style="display:none" />
+  </head>
+  <body>
+    <div id="header">
+      Genetic TSP Solver
+    </div>
+    <div id="content">
+      <div id="canvas_container">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div id="settings_container">
+        <label id="settings_text">numberCities:</label>
+        <input id="numberCities" type="text" value="30" style="float: right; width: 120px" />
+        <br />
+        <br />
+        <label id="settings_text">pointPlacement:</label>
+        <select id="pointPlacement" style="float: right; width: 124px">
+          <option value="0">random points</option>
+          <option value="1">circle</option>
+          <option value="2">grid</option>
+          <option value="3">switzerland</option>
+        </select>
+        <br />
+        <br />
+        <label id="settings_text">populationSize:</label>
+        <input id="populationSize" type="text" value="1000" style="float: right; width: 120px" />
+        <br />
+        <br />
+        <label id="settings_text">mutationRate:</label>
+        <input id="mutationRate" type="text" value="0.005" style="float: right; width: 120px" />
+        <br />
+        <br />
+        <label id="settings_text">graphSize:</label>
+        <input id="graphSize" type="text" value="1000" style="float: right; width: 120px;" />
+        <br />
+        <br />
+        <input id="settings_btn" type="submit" value="Start Simulation" style="float: right; width: 124px" />
+      </div>
+      <script src="scetch.js"></script>
+    </div>
+    <div id="footer">
+      Created by Lukas Wipf & Niklas van der Heide
+    </div>
+  </body>
+</html>
