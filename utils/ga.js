@@ -1,38 +1,75 @@
 class GeneticAlgorithm {
-  constructor(cities, populationSize, mutationRate) {
+  constructor(cities, populationSize, mutationRate, secureRate) {
     this.cities            = cities;
     this.populationSize    = populationSize;
     this.mutationRate      = mutationRate;
+    this.secureRate        = secureRate;
     this.currentPopulation = [];
   }
   generateNextGeneration() {
-    let nextGeneration = [];
+    let nextGeneration     = [];
     this.currentPopulation = this.quickSort(this.currentPopulation);
-    for (let i = 0; i < populationSize; i++) {
-      if (Math.random() * populationSize > i){
-        let newRoute = [];
-        let routeA   = (Math.random() > mutationRate) ? this.getRoute() : this.randomRoute();
-        let routeB   = (Math.random() > mutationRate) ? this.getRoute() : this.randomRoute();
-        let length   = Math.floor(Math.random() * this.cities.length);
-        let index    = Math.floor(Math.random() * this.cities.length);
-        for (let j = 0; j < length; j++) {
-          index = j % (this.cities.length - 1);
-          newRoute.push(routeA.cityOrder[index]);
-        }
-        for (let j = 0; j < this.cities.length; j++) {
-          if (!newRoute.includes(routeB.cityOrder[j])) {
-            newRoute.push(routeB.cityOrder[j]);
-          }
-        }
-        let cityOrder = new Route(newRoute);
-        if (Math.random() > mutationRate) {
-          cityOrder.mutate();
-        }
-        nextGeneration.push(cityOrder);
-      } else {
-        nextGeneration.push(this.currentPopulation[i]);
-      }
+    //console.log(this.populationSize,"in total");
+    //kill bottom routes
+    let numberToSecure    = Math.round(populationSize * this.secureRate);
+    this.currentPopulation.splice(numberToSecure, this.populationSize);
+    this.getFitness();
+    //console.log(this.populationSize - this.currentPopulation.length,"removed");
+    //save top routes
+    for (let i = 0; i < numberToSecure; i++) {
+      nextGeneration.push(this.currentPopulation[i]);
     }
+    //console.log(nextGeneration.length,"in next generation");
+    //fill rest
+    let toFill = this.populationSize - nextGeneration.length;
+    //console.log(toFill,"to fill");
+    //console.log(this.currentPopulation);
+    for (let i = 0; i < toFill; i++) {
+      //create new
+      let newCityOrder = [];
+      let routeA   = (Math.random() > mutationRate) ? this.getRoute() : this.randomRoute();
+      let routeB   = (Math.random() > mutationRate) ? this.getRoute() : this.randomRoute();
+      let length       = Math.floor(Math.random() * this.cities.length);
+      let index        = Math.floor(Math.random() * this.cities.length);
+      for (let j = 0; j < length; j++) {
+        index = j % (this.cities.length - 1);
+        newCityOrder.push(routeA.cityOrder[index]);
+      }
+      for (let j = 0; j < this.cities.length; j++) {
+        if (!newCityOrder.includes(routeB.cityOrder[j])) {
+          newCityOrder.push(routeB.cityOrder[j]);
+        }
+      }
+      nextGeneration.push(new Route(newCityOrder));
+    }
+    //console.log(nextGeneration,"new gen");
+    //mutate all
+    for (let i = 0; i < this.populationSize; i++) {
+      nextGeneration[i].mutate(this.mutationRate);
+    }
+
+    /*
+    for (let i = 0; i < populationSize; i++) {
+      let newRoute = [];
+      let routeA   = (Math.random() > mutationRate) ? this.getRoute() : this.randomRoute();
+      let routeB   = (Math.random() > mutationRate) ? this.getRoute() : this.randomRoute();
+      let length   = Math.floor(Math.random() * this.cities.length);
+      let index    = Math.floor(Math.random() * this.cities.length);
+      for (let j = 0; j < length; j++) {
+        index = j % (this.cities.length - 1);
+        newRoute.push(routeA.cityOrder[index]);
+      }
+      for (let j = 0; j < this.cities.length; j++) {
+        if (!newRoute.includes(routeB.cityOrder[j])) {
+          newRoute.push(routeB.cityOrder[j]);
+        }
+      }
+      let cityOrder = new Route(newRoute);
+      cityOrder.mutate();
+      nextGeneration.push(cityOrder);
+    }
+    */
+
     this.currentPopulation = nextGeneration;
     this.getFitness();
   }
@@ -40,21 +77,19 @@ class GeneticAlgorithm {
     if (inputArr.length <= 1) { 
       return inputArr;
     } else {
-
       let left = [];
       let right = [];
       let outputArr = [];
       let pivot = inputArr.pop(); //https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Array/pop
       let length = inputArr.length;
-  
+
       for (let i = 0; i < length; i++) {
-        if (inputArr[i].fitness <= pivot.fitness) {
+        if (inputArr[i].fitness >= pivot.fitness) {
           left.push(inputArr[i]);
         } else {
           right.push(inputArr[i]);
         }
       }
-  
       return outputArr.concat(this.quickSort(left), pivot, this.quickSort(right));
     }
   }
@@ -135,7 +170,7 @@ class GeneticAlgorithm {
       r.fitness        = 1 / (distances[i] + 1);
       totalFitness    += r.fitness;
     }
-    for (let i = 0; i < this.populationSize; i++) {
+    for (let i = 0; i < this.currentPopulation.length; i++) {
       this.currentPopulation[i].fitness  = this.currentPopulation[i].fitness / totalFitness;
     }
     this.averageLength = totalDist / this.populationSize;

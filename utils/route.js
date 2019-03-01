@@ -5,21 +5,22 @@ class Route {
     }
 
     mutate(mutationRate) {
+      //console.log("mutated");
         if (mutationRate >= Math.random()) {
-          let indexA = Math.floor(Math.random() * newRoute.length);
-          let indexB = Math.floor(Math.random() * newRoute.length);
+          let indexA = Math.floor(Math.random() * this.length);
+          let indexB = Math.floor(Math.random() * this.length);
           this.flipSection(indexA, indexB);
         }
     }
 
     flipSection(indexA, indexB) {
         if (indexA > indexB) {
-          this.flipSection(newRoute, indexB, indexA);
+          this.flipSection(indexB, indexA);
         } else {
           for (let i = 0; i < (indexB - indexA) / 2; i++) {
-            let temp             = newRoute[indexA + i];
-            newRoute[indexA + i] = newRoute[indexB - i];
-            newRoute[indexB - i] = temp;
+            let temp             = this.cityOrder[indexA + i];
+            this.cityOrder[indexA + i] = this.cityOrder[indexB - i];
+            this.cityOrder[indexB - i] = temp;
           }
         }
       }

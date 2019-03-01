@@ -45,7 +45,7 @@ document.getElementById("content").setAttribute("style","height:"+canvasHeight+"
 document.getElementById("settings_container").setAttribute("style","left: "+canvasWidth+"px; margin-left: "+margin+"px; margin-top: "+margin+"px");
 generateCities();
 let generationNumber = 0;
-let ga = new GeneticAlgorithm(cities, populationSize, mutationRate);
+let ga = new GeneticAlgorithm(cities, populationSize, mutationRate , 0.5);
 ga.generateRandomPopulation();
 startAlgorithm();
 
@@ -64,7 +64,7 @@ btn.addEventListener("click", () => {
   worstGraph         = [];
   bestEverGraph      = [];
   generationNumber   = 0;
-  ga                 = new GeneticAlgorithm(cities, populationSize, mutationRate);
+  ga                 = new GeneticAlgorithm(cities, populationSize, mutationRate, 0.5);
   ga.generateRandomPopulation();
 });
 
