@@ -49,14 +49,6 @@ ga.generateRandomPopulation();
 startAlgorithm();
 
 /**
- * temporary
- */
-canvas.addEventListener("mousedown", event => {
-  //console.log(event.clientY - 100);
-  console.log("cities.push(new City(canvasHeight / "+Math.round((canvasHeight / event.clientX) * 1000 ) / 1000+", canvasHeight / "+Math.round((canvasHeight / (event.clientY - 110) * 1000 )) / 1000+"));");
-})
-
-/**
  * Listen for button press to restart the algorithm
  */
 btn.addEventListener("click", () => {
