@@ -40,7 +40,6 @@ let worstGraph       = [];
 let bestEverGraph    = [];
 
 //First init
-console.log(canvasHeight);
 document.getElementById("content").setAttribute("style","height:"+canvasHeight+"px");
 document.getElementById("settings_container").setAttribute("style","left: "+canvasWidth+"px; margin-left: "+margin+"px; margin-top: "+margin+"px");
 generateCities();
@@ -48,6 +47,14 @@ let generationNumber = 0;
 let ga = new GeneticAlgorithm(cities, populationSize, mutationRate);
 ga.generateRandomPopulation();
 startAlgorithm();
+
+/**
+ * temporary
+ */
+canvas.addEventListener("mousedown", event => {
+  //console.log(event.clientY - 100);
+  console.log("cities.push(new City(canvasHeight / "+Math.round((canvasHeight / event.clientX) * 1000 ) / 1000+", canvasHeight / "+Math.round((canvasHeight / (event.clientY - 110) * 1000 )) / 1000+"));");
+})
 
 /**
  * Listen for button press to restart the algorithm
@@ -69,7 +76,7 @@ btn.addEventListener("click", () => {
 });
 
 /**
- * Create cities according to input
+ * Create cities according to pointPlacement mode
  */
 function generateCities() {
   cities = [];
@@ -165,6 +172,34 @@ function generateCities() {
 
     numberCities = cities.length;
     document.getElementById("numberCities").value = numberCities;
+  }else if(pointPlacement == 4){
+    cityColor   = "#0000FF";
+    routeColor  = "#000000";
+
+    cities.push(new City(canvasHeight / 12.069, canvasHeight / 2));
+    cities.push(new City(canvasHeight / 5.469, canvasHeight / 3.415));
+    cities.push(new City(canvasHeight / 2.823, canvasHeight / 7.865));
+    cities.push(new City(canvasHeight / 2.917, canvasHeight / 3.955));
+    cities.push(new City(canvasHeight / 1.570, canvasHeight / 6.481));
+    cities.push(new City(canvasHeight / 1.222, canvasHeight / 6.796));
+    cities.push(new City(canvasHeight / 1.079, canvasHeight / 2.834));
+    cities.push(new City(canvasHeight / 1.509, canvasHeight / 3.256));
+    cities.push(new City(canvasHeight / 1.989, canvasHeight / 3.804));
+    cities.push(new City(canvasHeight / 2.303, canvasHeight / 2.713));
+    cities.push(new City(canvasHeight / 3.271, canvasHeight / 2.397));
+    cities.push(new City(canvasHeight / 4.605, canvasHeight / 1.136));
+    cities.push(new City(canvasHeight / 3.804, canvasHeight / 1.724));
+    cities.push(new City(canvasHeight / 2.154, canvasHeight / 1.804));
+    cities.push(new City(canvasHeight / 1.928, canvasHeight / 1.417));
+    cities.push(new City(canvasHeight / 1.934, canvasHeight / 1.068));
+    cities.push(new City(canvasHeight / 1.493, canvasHeight / 1.679));
+    cities.push(new City(canvasHeight / 1.344, canvasHeight / 2.273));
+    cities.push(new City(canvasHeight / 1.420, canvasHeight / 1.250));
+    cities.push(new City(canvasHeight / 1.182, canvasHeight / 1.587));
+    cities.push(new City(canvasHeight / 1.138, canvasHeight / 1.085));
+
+    numberCities = cities.length;
+    document.getElementById("numberCities").value = numberCities;
   }
 }
 
@@ -189,24 +224,29 @@ function startAlgorithm() {
           image.width = canvasHeight;
           image.height = canvasHeight;
           c.drawImage(image, 0, 0, canvasHeight, canvasHeight);
-        } else {
+        }else if(pointPlacement == 4){
+          let image = document.getElementById("board");
+          image.width = canvasHeight;
+          image.height = canvasHeight;
+          c.drawImage(image, 0, 0, canvasHeight, canvasHeight);
+        }else {
           c.fillStyle = "#393e46";
           c.fillRect(0, 0, canvasWidth, canvasHeight);
         }
         c.strokeStyle = "#FFFFFF";
         c.strokeRect(0, 0, canvasWidth, canvasHeight);
         c.beginPath();
-        c.moveTo(canvasWidth -  infoWidth, 0);
-        c.lineTo(canvasWidth -  infoWidth, canvasHeight);
+        c.moveTo(canvasWidth - infoWidth, 0);
+        c.lineTo(canvasWidth - infoWidth, canvasHeight);
         c.stroke();
-        c.moveTo(canvasWidth -  infoWidth, section1);
-        c.lineTo(canvasWidth,   section1);
+        c.moveTo(canvasWidth - infoWidth, section1);
+        c.lineTo(canvasWidth,  section1);
         c.stroke();
-        c.moveTo(canvasWidth -  infoWidth, section2);
-        c.lineTo(canvasWidth,   section2);
+        c.moveTo(canvasWidth - infoWidth, section2);
+        c.lineTo(canvasWidth,  section2);
         c.stroke();
-        c.moveTo(canvasWidth -  infoWidth, section3);
-        c.lineTo(canvasWidth,   section3);
+        c.moveTo(canvasWidth - infoWidth, section3);
+        c.lineTo(canvasWidth,  section3);
         c.stroke();
         c.closePath();
 
@@ -217,19 +257,19 @@ function startAlgorithm() {
         c.font              = textSize + "px Arial";
         c.fillStyle         = "#FFFFFF";
         c.textAlign         = "left";
-        c.fillText("ms/generation:           "   + msg,                                                     statsXStart, section0YOffset,  statsWidth);
+        c.fillText("ms for each generation:  "        + msg,                                                                 statsXStart, section0YOffset, statsWidth);
         section0YOffset += (textSize + textPadding);
-        c.fillText("generation:                " + generationNumber,                                        statsXStart, section0YOffset,  statsWidth);
+        c.fillText("Generation:                     " + generationNumber,                                                    statsXStart, section0YOffset, statsWidth);
         section0YOffset += (textSize + textPadding);
-        c.fillText("numberCities:            "   + numberCities,                                            statsXStart, section0YOffset,  statsWidth);
+        c.fillText("Number of cities:             "   + numberCities,                                                        statsXStart, section0YOffset, statsWidth);
         section0YOffset += (textSize + textPadding);
-        c.fillText("populationSize:          "   + populationSize,                                          statsXStart, section0YOffset, statsWidth);
+        c.fillText("Population size:              "   + populationSize,                                                      statsXStart, section0YOffset, statsWidth);
         section0YOffset += (textSize + textPadding);
-        c.fillText("mutationRate:            "   + mutationRate,                                            statsXStart, section0YOffset, statsWidth);
+        c.fillText("Mutation rate:                  " + mutationRate,                                                        statsXStart, section0YOffset, statsWidth);
         section0YOffset += (textSize + textPadding);
-        c.fillText("best ever length:        "   + Math.round(Math.sqrt(ga.bestEverLength)) +" pxls",       statsXStart, section0YOffset, statsWidth);
+        c.fillText("Best ever length:             "   + Math.round(Math.sqrt(ga.bestEverLength) * 100) / 100 +" pxls",       statsXStart, section0YOffset, statsWidth);
         section0YOffset += (textSize + textPadding);
-        c.fillText("best current length:    "    + Math.round(Math.sqrt(ga.generationBestLength)) +" pxls", statsXStart, section0YOffset, statsWidth);
+        c.fillText("Best current length:         "    + Math.round(Math.sqrt(ga.generationBestLength) * 100) / 100 +" pxls", statsXStart, section0YOffset, statsWidth);
 
         //Best ever route
         c.strokeStyle = routeColor;

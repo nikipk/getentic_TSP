@@ -33,11 +33,6 @@ class GeneticAlgorithm {
     if (this.mutationRate >= Math.random()) {
       let indexA = Math.floor(Math.random() * newRoute.length);
       let indexB = Math.floor(Math.random() * newRoute.length);
-      //let indexA = Math.floor(Math.random() * newRoute.length);
-      //let indexB = (indexA + 1) % newRoute.length;
-      //let optionA = newRoute[indexA];
-      //newRoute[indexA] = newRoute[indexB];
-      //newRoute[indexB] = optionA;
       this.flipRoute(newRoute, indexA, indexB);
     }
     return newRoute;
